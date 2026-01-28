@@ -1,0 +1,13 @@
+services:
+  goof:
+    image: goof-app:${GIT_COMMIT:-latest}
+    build: .
+    container_name: goof-staging
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:3
+    container_name: mongo-staging

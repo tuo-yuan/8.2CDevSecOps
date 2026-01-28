@@ -1,0 +1,15 @@
+services:
+  goof:
+    image: goof-app:${GIT_COMMIT:-latest}
+    build: .
+    container_name: goof-production
+    ports:
+      - "3002:3001"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:3
+    container_name: mongo-production
