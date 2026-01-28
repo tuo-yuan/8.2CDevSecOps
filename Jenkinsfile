@@ -27,13 +27,24 @@ pipeline {
                     
                     # Start app with MongoDB for testing
                     docker compose -f docker-compose.staging.yml up -d
-                    sleep 15
                     
-                    # Run integration test - verify app responds
-                    curl -sS http://127.0.0.1:3001 | grep -q "todo" && echo "Integration test PASSED"
+                    # Wait and retry health check
+                    echo "Waiting for app to start..."
+                    for i in 1 2 3 4 5 6; do
+                        sleep 10
+                        if curl -sS http://127.0.0.1:3001 2>/dev/null | grep -q "todo"; then
+                            echo "Integration test PASSED"
+                            docker compose -f docker-compose.staging.yml down || true
+                            exit 0
+                        fi
+                        echo "Attempt $i - app not ready yet..."
+                    done
                     
-                    # Stop test environment
-                    docker compose -f docker-compose.staging.yml down
+                    # Show logs if failed
+                    docker compose -f docker-compose.staging.yml logs
+                    docker compose -f docker-compose.staging.yml down || true
+                    echo "Integration test FAILED"
+                    exit 1
                 '''
             }
         }
