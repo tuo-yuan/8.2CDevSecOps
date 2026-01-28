@@ -15,11 +15,29 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'staging'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
     static_configs:
-      - targets: ['host.docker.internal:3001']
-    metrics_path: /
+      - targets: ['http://host.docker.internal:3001']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
 
   - job_name: 'production'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
     static_configs:
-      - targets: ['host.docker.internal:3002']
-    metrics_path: /
+      - targets: ['http://host.docker.internal:3002']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115
