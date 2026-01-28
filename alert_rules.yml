@@ -2,13 +2,22 @@ groups:
   - name: app_alerts
     rules:
       - alert: AppDown
-        expr: up{job="app"} == 0
+        expr: up{job="production"} == 0
         for: 30s
         labels:
           severity: critical
         annotations:
-          summary: "Application is down"
-          description: "The application has been unreachable for more than 30 seconds."
+          summary: "Production is down"
+          description: "Production application unreachable for 30+ seconds."
+
+      - alert: StagingDown
+        expr: up{job="staging"} == 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Staging is down"
+          description: "Staging application unreachable for 30+ seconds."
 
       - alert: HighResponseTime
         expr: http_request_duration_seconds > 2

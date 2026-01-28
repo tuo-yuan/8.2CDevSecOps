@@ -14,7 +14,12 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
-  - job_name: 'app'
+  - job_name: 'staging'
     static_configs:
-      - targets: ['host.docker.internal:8000']
-    metrics_path: /metrics
+      - targets: ['host.docker.internal:3001']
+    metrics_path: /
+
+  - job_name: 'production'
+    static_configs:
+      - targets: ['host.docker.internal:3002']
+    metrics_path: /
