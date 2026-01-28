@@ -1,12 +1,13 @@
 services:
   goof:
-    image: goof-app:${GIT_COMMIT:-latest}
+    image: goof-app:${GIT_COMMIT}
     build: .
     container_name: goof-production
     ports:
       - "3002:3001"
     environment:
       - NODE_ENV=production
+      - MONGOLAB_URI=mongodb://mongo:27017/express-todo
     depends_on:
       - mongo
 

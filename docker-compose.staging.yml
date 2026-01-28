@@ -1,10 +1,12 @@
 services:
   goof:
-    image: goof-app:${GIT_COMMIT:-latest}
+    image: goof-app:${GIT_COMMIT}
     build: .
     container_name: goof-staging
     ports:
       - "3001:3001"
+    environment:
+      - MONGOLAB_URI=mongodb://mongo:27017/express-todo
     depends_on:
       - mongo
 
